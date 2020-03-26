@@ -30,6 +30,16 @@ module Boring =
         let width' = (String.length line) * width
         [ for i in width' .. -1 .. 1 -> (spaces i) + line ]
 
+    let swiggy line window count =
+        let rec repeat count =
+            match count with 
+            | 0 -> []
+            | _ ->
+                moveRight line window
+                @ moveLeft line window
+                @ repeat (count - 1)
+        repeat count 
+
     let rna line window count =
         let opening =
             moveRight line window
@@ -77,8 +87,10 @@ module Boring =
 
     let borify line window =
         let count = 1
-        rna line 1 1 
-        @ rna line 3 1 
+        swiggy line 3 1
+        @ swiggy line 5 1
+        @ swiggy line window 1
+        @rna line 3 1 
         @ shiftLeft line 
         @ rna line 5 1 
         @ shiftLeft line 
