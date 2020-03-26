@@ -30,21 +30,21 @@ module Boring =
         let width' = (String.length line) * width
         [ for i in width' .. -1 .. 1 -> (spaces i) + line ]
 
-    let dnaHalf line window count =
+    let rna line window count =
         let opening =
             moveRight line window
             @ shiftRight line window
-              @ ((shiftRight line window) |> List.rev).[1..]
-                @ moveLeft line window 
-                  @ ((shiftLeft line) |> List.rev).[..(String.length line - 2)]
+            @ ((shiftRight line window) |> List.rev).[1..]
+            @ moveLeft line window 
+            @ ((shiftLeft line) |> List.rev).[..(String.length line - 2)]
 
         let body =
             (shiftLeft line).[1..]
             @ moveRight line window
-              @ shiftRight line window
-                @ ((shiftRight line window) |> List.rev).[1..]
-                  @ moveLeft line window 
-                    @ ((shiftLeft line) |> List.rev).[..(String.length line - 2)]
+            @ shiftRight line window
+            @ ((shiftRight line window) |> List.rev).[1..]
+            @ moveLeft line window 
+            @ ((shiftLeft line) |> List.rev).[..(String.length line - 2)]
 
         let rec repeat count =
             match count with
@@ -77,10 +77,15 @@ module Boring =
 
     let borify line window =
         let count = 1
-        dnaHalf line 3 1 
-          @ shiftLeft line 
-            @ [ line ] 
-              @ hourGlass line window count
+        rna line 1 1 
+        @ rna line 3 1 
+        @ shiftLeft line 
+        @ rna line 5 1 
+        @ shiftLeft line 
+        @ rna line window 1 
+        @ shiftLeft line 
+        @ [ line ] 
+        @ hourGlass line window count
 
 
 module Driver =
@@ -96,7 +101,7 @@ module Driver =
 
         let sw = Diagnostics.Stopwatch()
         sw.Start()
-        let output = String.Join("\n", (borify line 2))
+        let output = String.Join("\n", (borify line 7))
         sw.Stop()
         System.IO.File.WriteAllText("text.txt", output)
         printfn "%s" output
