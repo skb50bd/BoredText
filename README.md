@@ -1,3 +1,3 @@
 # Bored Text
 
-This program generates long NOT SO BORING text. 
+This program generates text in NOT SO BORING pattern. 
